@@ -43,6 +43,8 @@
    - Windows: `C:\Users\<user>\AppData\Roaming\down_on_spot\settings.json`
    - Unix: `~/.config/down_on_spot/settings.json`
 
+   You can obtain your `access_token` from [https://open.spotify.com/get_access_token](https://open.spotify.com/get_access_token) when you are logged in.
+
 🎉 Now you can use DownOnSpot
 
    ```bash

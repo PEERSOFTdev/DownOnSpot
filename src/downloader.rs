@@ -1,4 +1,3 @@
-use aspotify::Tracks;
 use async_std::channel::{bounded, Receiver, Sender};
 use async_stream::try_stream;
 use chrono::NaiveDate;

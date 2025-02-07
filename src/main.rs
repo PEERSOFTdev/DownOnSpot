@@ -14,7 +14,6 @@ use async_std::task;
 use colored::Colorize;
 use downloader::{DownloadState, Downloader};
 use error::SpotifyError;
-use librespot::core::spotify_id::SpotifyIdResult;
 use settings::Settings;
 use spotify::Spotify;
 use std::time::{Duration, Instant};
@@ -45,9 +44,8 @@ async fn start() {
 	let settings = match Settings::load().await {
 		Ok(settings) => {
 			println!(
-				"{} {}.",
+				"{}.",
 				"Settings successfully loaded.\nContinuing with spotify account:".green(),
-				settings.username
 			);
 			settings
 		}
@@ -57,7 +55,7 @@ async fn start() {
 				"Settings could not be loaded, because of the following error:".red(),
 				e
 			);
-			let default_settings = Settings::new("username", "password", "client_id", "secret");
+			let default_settings = Settings::new("access_token", "client_id", "secret");
 			match default_settings.save().await {
 				Ok(path) => {
 					println!(
@@ -79,8 +77,7 @@ async fn start() {
 	};
 
 	let spotify = match Spotify::new(
-		&settings.username,
-		&settings.password,
+		&settings.access_token,
 		&settings.client_id,
 		&settings.client_secret,
 		settings.market_country_code,
