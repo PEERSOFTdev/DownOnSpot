@@ -486,23 +486,22 @@ impl DownloaderInternal {
 		Ok(())
 	}
 
-    
-    async fn find_alternative(session: &Session, track: Track) -> Result<Track, SpotifyError> {
-        let librespot::metadata::track::Tracks(ids) = track.alternatives;
-        for id in ids {
-            let t = Track::get(session, &id).await?;
-            if !Self::track_has_alternatives(&t) {
-                return Ok(t);
-            }
-        }
+	async fn find_alternative(session: &Session, track: Track) -> Result<Track, SpotifyError> {
+		let librespot::metadata::track::Tracks(ids) = track.alternatives;
+		for id in ids {
+			let t = Track::get(session, &id).await?;
+			if !Self::track_has_alternatives(&t) {
+				return Ok(t);
+			}
+		}
 
-        Err(SpotifyError::Unavailable)
-    }
+		Err(SpotifyError::Unavailable)
+	}
 
-    fn track_has_alternatives(track: &Track) -> bool {
-        let librespot::metadata::track::Tracks(alts) = &track.alternatives;
-        !alts.is_empty()
-    }
+	fn track_has_alternatives(track: &Track) -> bool {
+		let librespot::metadata::track::Tracks(alts) = &track.alternatives;
+		!alts.is_empty()
+	}
 
 	/// Download track by id
 	async fn download_track(
@@ -517,11 +516,9 @@ impl DownloaderInternal {
 		let mut track = Track::get(session, &id).await?;
 
 		// Fallback if unavailable
-        if Self::track_has_alternatives(&track) {
-            track = Self::find_alternative(session, track).await?;
-        }
-        
-
+		if Self::track_has_alternatives(&track) {
+			track = Self::find_alternative(session, track).await?;
+		}
 
 		// if !track.available {
 		// 	track = DownloaderInternal::find_alternative(session, track).await?;
@@ -699,7 +696,7 @@ pub enum AudioFormat {
 	Aac,
 	Mp3,
 	Mp4,
-    Flac,
+	Flac,
 	Unknown,
 }
 
@@ -711,7 +708,7 @@ impl AudioFormat {
 			AudioFormat::Aac => "m4a",
 			AudioFormat::Mp3 => "mp3",
 			AudioFormat::Mp4 => "mp4",
-            AudioFormat::Flac => "flac",
+			AudioFormat::Flac => "flac",
 			AudioFormat::Unknown => "",
 		}
 		.to_string()
@@ -731,7 +728,7 @@ impl From<FileFormat> for AudioFormat {
 			FileFormat::MP3_160_ENC => Self::Mp3,
 			FileFormat::AAC_24 => Self::Aac,
 			FileFormat::AAC_48 => Self::Aac,
-            FileFormat::FLAC_FLAC => Self::Flac
+			FileFormat::FLAC_FLAC => Self::Flac,
 		}
 	}
 }
@@ -742,7 +739,7 @@ impl Quality {
 		match self {
 			Self::Q320 => vec![
 				FileFormat::OGG_VORBIS_320,
-				FileFormat::AAC_48,  // TODO
+				FileFormat::AAC_48, // TODO
 				FileFormat::MP3_320,
 			],
 			Self::Q256 => vec![FileFormat::MP3_256],
