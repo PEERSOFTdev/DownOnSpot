@@ -45,6 +45,8 @@
 
    You can obtain your `access_token` from [https://open.spotify.com/get_access_token](https://open.spotify.com/get_access_token) when you are logged in.
 
+   The `client_id` and `client_secret` can be obtained by creating an app at [https://developer.spotify.com](spotify for developers).
+
 🎉 Now you can use DownOnSpot
 
    ```bash
