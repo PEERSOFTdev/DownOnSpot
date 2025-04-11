@@ -43,7 +43,8 @@
    - Windows: `C:\Users\<user>\AppData\Roaming\down_on_spot\settings.json`
    - Unix: `~/.config/down_on_spot/settings.json`
 
-   You can obtain your `access_token` from [https://open.spotify.com/get_access_token](https://open.spotify.com/get_access_token) when you are logged in.
+   You can obtain your `access_token` by following [https://developer.spotify.com/documentation/web-api/tutorials/getting-started#request-an-access-token](this guide).
+   Or on [open.spotify.com](the webplayer) also uses an access token (with a longer ttl), which you can view by inspecting the network traffic via your browser dev tools.
 
    The `client_id` and `client_secret` can be obtained by creating an app at [https://developer.spotify.com](spotify for developers).
 
