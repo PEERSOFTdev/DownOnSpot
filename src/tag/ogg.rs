@@ -17,7 +17,7 @@ impl OggTag {
 	/// Load tag from file
 	pub fn open(path: impl AsRef<Path>) -> Result<OggTag, SpotifyError> {
 		let mut file = File::open(&path)?;
-		let tag = read_comment_header(&mut file);
+		let tag = read_comment_header(&mut file).map_err(|e| SpotifyError::Error(e.to_string()))?;
 		Ok(OggTag {
 			path: path.as_ref().to_owned(),
 			tag,
@@ -72,13 +72,14 @@ impl super::Tag for OggTag {
 	fn set_raw(&mut self, tag: &str, value: Vec<String>) {
 		self.tag.add_tag_multi(
 			tag,
-			&value.iter().map(|v| v.as_str()).collect::<Vec<&str>>(),
+			&value.iter().map(|v| v.to_string()).collect::<Vec<String>>(),
 		);
 	}
 
 	fn save(&mut self) -> Result<(), SpotifyError> {
 		let file = File::open(&self.path)?;
-		let mut out = replace_comment_header(file, self.tag.clone());
+		let mut out = replace_comment_header(file, &self.tag.clone())
+			.map_err(|e| SpotifyError::Error(e.to_string()))?;
 		let mut file = File::create(&self.path)?;
 		std::io::copy(&mut out, &mut file)?;
 		Ok(())

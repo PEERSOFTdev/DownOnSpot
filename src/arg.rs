@@ -24,6 +24,6 @@ fn get_command() -> Command {
 			"Settings file located at: {}",
 			settings::get_config_settings_path().to_string_lossy()
 		));
-	
+
 	Args::augment_args(cli)
 }

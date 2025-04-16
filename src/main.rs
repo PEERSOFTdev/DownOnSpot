@@ -14,7 +14,6 @@ use async_std::task;
 use colored::Colorize;
 use downloader::{DownloadState, Downloader};
 use error::SpotifyError;
-use librespot::core::spotify_id::SpotifyIdResult;
 use settings::Settings;
 use spotify::Spotify;
 use std::time::{Duration, Instant};
@@ -44,11 +43,7 @@ async fn start() {
 
 	let settings = match Settings::load().await {
 		Ok(settings) => {
-			println!(
-				"{} {}.",
-				"Settings successfully loaded.\nContinuing with spotify account:".green(),
-				settings.username
-			);
+			println!("{}.", "Settings successfully loaded.\nContinuing".green());
 			settings
 		}
 		Err(e) => {
@@ -57,7 +52,7 @@ async fn start() {
 				"Settings could not be loaded, because of the following error:".red(),
 				e
 			);
-			let default_settings = Settings::new("username", "password", "client_id", "secret");
+			let default_settings = Settings::new("access_token", "client_id", "secret");
 			match default_settings.save().await {
 				Ok(path) => {
 					println!(
@@ -79,8 +74,7 @@ async fn start() {
 	};
 
 	let spotify = match Spotify::new(
-		&settings.username,
-		&settings.password,
+		&settings.access_token,
 		&settings.client_id,
 		&settings.client_secret,
 		settings.market_country_code,
@@ -334,7 +328,12 @@ async fn start() {
 }
 
 fn secs_to_hrs_min_sec(secs: i32) -> String {
-	format!("{:0>2}:{:0>2}:{:0>2}", secs / 3600, (secs % 3600) / 60, secs % 60)
+	format!(
+		"{:0>2}:{:0>2}:{:0>2}",
+		secs / 3600,
+		(secs % 3600) / 60,
+		secs % 60
+	)
 }
 
 // !cargo b --release
