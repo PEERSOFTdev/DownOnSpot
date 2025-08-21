@@ -1,3 +1,7 @@
+use crate::converter::AudioConverter;
+use crate::error::SpotifyError;
+use crate::spotify::{Spotify, SpotifyItem};
+use crate::tag::{Field, TagWrap};
 use async_std::channel::{Receiver, Sender, bounded};
 use async_stream::try_stream;
 use chrono::NaiveDate;
@@ -14,13 +18,9 @@ use serde::{Deserialize, Serialize};
 use std::fmt::Display;
 use std::io::Read;
 use std::path::{Path, PathBuf};
+use std::time::Duration;
 use tokio::fs::File;
 use tokio::io::AsyncWriteExt;
-
-use crate::converter::AudioConverter;
-use crate::error::SpotifyError;
-use crate::spotify::{Spotify, SpotifyItem};
-use crate::tag::{Field, TagWrap};
 
 /// Wrapper for use with UI
 #[derive(Debug, Clone)]
@@ -264,12 +264,23 @@ impl DownloaderInternal {
 	async fn download_job_wrapper(&self, job: DownloadJob, config: DownloaderConfig) {
 		let id = job.id;
 		match self.download_job(job, config).await {
-			Ok(_) => {}
+			Ok(_) => tokio::time::sleep(Duration::from_secs(1)).await,
+			Err(SpotifyError::AlreadyDownloaded) => {
+				self.event_tx
+					.send(Message::UpdateState(
+						id,
+						DownloadState::Error(SpotifyError::AlreadyDownloaded),
+					))
+					.await
+					.unwrap();
+			}
 			Err(e) => {
 				self.event_tx
 					.send(Message::UpdateState(id, DownloadState::Error(e)))
 					.await
 					.unwrap();
+				// std::thread::sleep(Duration::new(5, 0));
+				tokio::time::sleep(Duration::from_secs(7)).await;
 			}
 		}
 	}
