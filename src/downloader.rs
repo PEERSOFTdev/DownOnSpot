@@ -948,10 +948,10 @@ impl DownloaderConfig {
 	pub fn new() -> DownloaderConfig {
 		DownloaderConfig {
 			concurrent_downloads: 4,
-			quality: Quality::Q320,
+			quality: Quality::Q160,
 			path: "downloads".to_string(),
-			filename_template: "%artist% - %title%".to_string(),
-			filename_template_playlist: "%artist% - %title%".to_string(),
+			filename_template: "%albumArtist% - %album%/%artist% - %title%".to_string(),
+			filename_template_playlist: "%trackIndex%-%artist% - %title%".to_string(),
 			id3v24: true,
 			convert_to_mp3: false,
 			separator: ", ".to_string(),
