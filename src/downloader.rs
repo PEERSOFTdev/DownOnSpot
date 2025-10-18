@@ -101,14 +101,12 @@ impl Downloader {
 				let queue: Vec<Download> = tracks
 					.into_iter()
 					.enumerate()
-					.filter_map(|(idx, t)| {
-						if t.is_local {
-							return None;
-						}
+					.filter(|(_, t)| !t.is_local)
+					.map(|(idx, t)| {
 						let mut download: Download = t.into();
 						download.track_index = Some((idx + 1) as u32);
 						download.is_from_playlist = true;
-						Some(download)
+						download
 					})
 					.collect();
 				self.add_to_queue_multiple(queue).await;
